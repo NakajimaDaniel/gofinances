@@ -25,8 +25,8 @@ export function Dashboard() {
         </UserWrapper>
       </Header> 
       <HighlightCards>
-        <HighlightCard />
-        <HighlightCard />
+        <HighlightCard title="Entradas" amount="dasdasdasd" lastTransaction="dasdasdasd" type="up" />
+        <HighlightCard title="Entradas" amount="dasdasdasd" lastTransaction="dasdasdasd" type="total" />
       </HighlightCards>
     </Container>
   )
