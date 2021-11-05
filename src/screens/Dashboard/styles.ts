@@ -97,3 +97,9 @@ export const Title = styled.Text `
   font-family: ${({theme}) => theme.fonts.regular};
 
 `
+
+
+export const TransactionsList = styled.FlatList `
+  
+
+`
