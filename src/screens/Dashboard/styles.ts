@@ -102,7 +102,7 @@ export const Title = styled.Text `
 `
 
 
-export const TransactionsList = styled(FlatList as new () => FlatList<DataListProps>).attr({
+export const TransactionsList = styled(FlatList as new () => FlatList<DataListProps>).attrs({
   showsVerticalScrollIndicator:false,
   contentContainerStyle:{
     paddingBottom: getBottomSpace()

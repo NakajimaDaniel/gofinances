@@ -15,14 +15,16 @@ interface Category {
   name: string;
   icon: string;
 }
+
+interface DataProps {
+  type: 'positive' | 'negative';
+  title: string;
+  amount: string;
+  category: Category;
+  date: string;
+}
 export interface TransactionCardProps {
-  data: {
-    type: 'positive' | 'negative';
-    title: string;
-    amount: string;
-    category: Category;
-    date: string;
-  }
+  data: DataProps
 }
 
 export function TransactionCard({ data }: TransactionCardProps) {
