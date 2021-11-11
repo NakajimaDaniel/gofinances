@@ -2,6 +2,7 @@ import { TouchableOpacity } from 'react-native'
 import styled, { css } from 'styled-components/native'
 import {Feather} from '@expo/vector-icons'
 import { RFValue } from 'react-native-responsive-fontsize'
+import { RectButton } from 'react-native-gesture-handler'
 
 
 interface IconsProps {
@@ -13,19 +14,14 @@ interface ContainerProps {
   type: 'up' | 'down';
 }
 
-export const Container = styled(TouchableOpacity)<ContainerProps> `
+export const Container = styled.View<ContainerProps> `
   width: 48%;
-  flex-direction: row;
+
 
   border-width: ${({ isActive }) => isActive ? 0 : 1.5}px;
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.text};
   border-radius: 5px;
-  align-items: center;
-
-  padding: 16px;
-
-  justify-content: center;
 
   ${({ isActive, type }) => isActive && type === 'down' && css `
     background-color: ${({ theme }) => theme.colors.attention_light};
@@ -39,22 +35,27 @@ export const Container = styled(TouchableOpacity)<ContainerProps> `
 
 `
 
+export const Button = styled(RectButton) `
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  padding: 16px;
+
+`;
+
 
 export const Icon = styled(Feather)<IconsProps> `
   font-size: ${RFValue(24)}px;
   margin-right: 12px;
 
-  color: ${({ theme, type }) => type === 'up' ? theme.colors.success : theme.colors.attention }
+  color: ${({ theme, type }) => type === 'up' ? theme.colors.success : theme.colors.attention };
 
 `
-
 
 export const Title = styled.Text `
   font-size: ${RFValue(14)}px;
 
-  font-family: ${({ theme }) => theme.fonts.regular}
-
-
-
+  font-family: ${({ theme }) => theme.fonts.regular};
 
 `
+
