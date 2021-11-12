@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Alert, Keyboard, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Button } from '../../components/Forms/Button'
@@ -20,6 +20,7 @@ import {
   TransactionsTypes,
 
  } from './styles'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface FormData {
@@ -40,6 +41,7 @@ const schema = Yup.object().shape({
 
 export function Register() {
 
+  const dataKey = '@gofinances:transactions';
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const[category, setCategory] = useState({
@@ -64,7 +66,7 @@ export function Register() {
     setCategoryModalOpen(true);
   }
 
-  function handleRegister(form: FormData) {
+  async function handleRegister(form: FormData) {
 
     if (!transactionType) { return Alert.alert("selecione o tipo da transacao")};
     if(category.key === 'category') { return Alert.alert("selecione a categoria")};
@@ -76,8 +78,24 @@ export function Register() {
       transactionType,
       category: category.key,
     }
-    console.log(data)
+
+    try {
+      await AsyncStorage.setItem(dataKey, JSON.stringify(data));
+
+    }catch (error) {
+      console.log(error);
+      Alert.alert("não foi possivel salvar");
+    }
   }
+
+
+  useEffect(() => {
+    async function GetData() {
+      const data = await AsyncStorage.getItem(dataKey);
+      console.log(JSON.parse(data!))
+    }
+    GetData();
+  }, [])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
