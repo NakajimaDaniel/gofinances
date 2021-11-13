@@ -8,8 +8,12 @@ import { InputForm } from '../../components/Forms/InputForm';
 import { TransactionTypeButton } from '../../components/Forms/TransactionTypeButton'
 import { CategorySelect } from '../CategorySelect'
 
+
+
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import uuid from 'react-native-uuid'
+
 
 import { 
   Container,
@@ -21,6 +25,7 @@ import {
 
  } from './styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/core';
 
 
 interface FormData {
@@ -50,8 +55,9 @@ export function Register() {
 
   })
 
+  const navigation = useNavigation();
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema)
   })
 
@@ -72,15 +78,32 @@ export function Register() {
     if(category.key === 'category') { return Alert.alert("selecione a categoria")};
 
 
-    const data = {
+    const newTransaction = {
+      id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
       transactionType,
       category: category.key,
+      date: new Date(),
     }
 
     try {
-      await AsyncStorage.setItem(dataKey, JSON.stringify(data));
+      const data = await AsyncStorage.getItem(dataKey);
+      const currentData = data ? JSON.parse(data) : [];
+      const dataFormatted = [
+        ...currentData,
+        newTransaction
+      ]
+      await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
+
+      reset();
+      setTransactionType('');
+      setCategory({
+        key: 'category',
+        name: 'categoria',
+      });
+
+      navigation.navigate('Listagem');
 
     }catch (error) {
       console.log(error);
@@ -89,13 +112,6 @@ export function Register() {
   }
 
 
-  useEffect(() => {
-    async function GetData() {
-      const data = await AsyncStorage.getItem(dataKey);
-      console.log(JSON.parse(data!))
-    }
-    GetData();
-  }, [])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
