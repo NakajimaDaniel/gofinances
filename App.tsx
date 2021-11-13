@@ -4,6 +4,10 @@ import { ThemeProvider } from 'styled-components';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import AppLoading from 'expo-app-loading';
 
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
+
+
 import { Dashboard } from './src/screens/Dashboard';
 import theme from './src/global/styles/theme';
 
