@@ -61,7 +61,7 @@ export function Register() {
     resolver: yupResolver(schema)
   })
 
-  function handleTransactionTypeSelect(type: 'up' | 'down') {
+  function handleTransactionTypeSelect(type: 'positive' | 'negative') {
     setTransactionType(type);
   }
 
@@ -82,7 +82,7 @@ export function Register() {
       id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date(),
     }
@@ -126,11 +126,11 @@ export function Register() {
         <InputForm control={control} name="name" placeholder="Nome" autoCapitalize="sentences" autoCorrect={false}  error={errors.name && errors.name.message} />
         <InputForm control={control} name="amount" placeholder="preço" keyboardType="numeric" error={errors.amount && errors.amount.message}  />
         <TransactionsTypes>
-          <TransactionTypeButton type="up" title="income" onPress={() => handleTransactionTypeSelect('up')} isActive={transactionType === 'up'}  />
-          <TransactionTypeButton type="down" title="outcome" onPress={() => handleTransactionTypeSelect('down')} isActive={transactionType === 'down'}  />
+          <TransactionTypeButton type="up" title="income" onPress={() => handleTransactionTypeSelect('positive')} isActive={transactionType === 'positive'}  />
+          <TransactionTypeButton type="down" title="outcome" onPress={() => handleTransactionTypeSelect('negative')} isActive={transactionType === 'negative'}  />
         </TransactionsTypes>
         <CategorySelectButton title={category.name} onPress={handleOpenSelectCategory}  />
-      </Fields>
+      </Fields> 
 
       <Button title="Enviar" onPress={handleSubmit(handleRegister)}  />
     </Form>
