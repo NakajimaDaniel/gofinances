@@ -1,15 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { VictoryPie } from 'victory-native';
 import { HistoryCard } from '../../components/HistoryCard';
 import { categories } from '../../utils/categories';
-import { Container, Header, Title, Content, ChartContainer, MonthSelect, MonthSelectButton, SelectIcon, Month } from './styles';
+import { Container, Header, Title, Content, ChartContainer, MonthSelect, MonthSelectButton, SelectIcon, Month, LoadContainer } from './styles';
 import { useTheme } from 'styled-components';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { addMonths, subMonths, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale'
+import { ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 interface TransactionData {
@@ -31,6 +33,7 @@ interface CategoryData {
 
 export function Resume() {
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
@@ -47,6 +50,7 @@ export function Resume() {
   }
 
   async function loadData() {
+    setIsLoading(true);
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
@@ -91,19 +95,24 @@ export function Resume() {
       }
 
     })
+
     setTotalByCategories(totalByCategory);
+    setIsLoading(false);
   }
 
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     loadData();
-  },[selectedDate])
+  },[selectedDate]))
 
   return (
     <Container>
       <Header>
         <Title>Resumo</Title>
       </Header>
+      {isLoading ? <LoadContainer><ActivityIndicator color={theme.colors.primary} size="large" /></LoadContainer> : 
+      <>
+
       <Content  
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -131,7 +140,9 @@ export function Resume() {
         {totalByCategories.map(item => (
           <HistoryCard key={item.key}  title={item.name} amount={item.totalFormatted} color={item.color} />
         ))}
-      </Content>
+      </Content> 
+      </>
+    }
     </Container>
   )
 }
