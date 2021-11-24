@@ -8,18 +8,13 @@ import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 
 
-import { Dashboard } from './src/screens/Dashboard';
 import theme from './src/global/styles/theme';
 
-import { Register } from './src/screens/Register'
-
-import { NavigationContainer } from '@react-navigation/native'
-import { AppRoutes } from './src/routes/app.routes';
-import { StatusBar } from 'react-native';
 
 import { SignIn } from './src/screens/SignIn';
 import { AuthProvider } from './src/hooks/auth';
 
+import { Routes } from './src/routes';
 
 export default function App() {
 
@@ -35,15 +30,12 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-     <NavigationContainer>
+
        {/* <StatusBar barStyle="light-content" /> */}
-     {/* <AppRoutes /> */}
-     
       <AuthProvider>
-        <SignIn />
+        <Routes />
       </AuthProvider>
 
-     </NavigationContainer>
     </ThemeProvider>
 
   );
