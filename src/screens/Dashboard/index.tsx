@@ -4,12 +4,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator } from 'react-native'
-import { getBottomSpace } from 'react-native-iphone-x-helper'
 import { HighlightCard } from '../../components/HighlightCard'
 import { TransactionCard,TransactionCardProps } from '../../components/TransactionCard'
 
 import { useTheme } from 'styled-components';
 import { Container, Header, UserInfo, Photo, User, UserGreeting, UserName, UserWrapper, Icon, HighlightCards, Transactions, Title, TransactionsList, LogoutButton, LoadContainer} from './styles'
+import { useAuth } from '../../hooks/auth'
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -29,9 +29,12 @@ export function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<DataListProps[]>([]);
-  const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData)
+  const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
+
 
   const theme = useTheme();
+
+  const { signOut, user } = useAuth();
 
   function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
 
@@ -137,15 +140,15 @@ export function Dashboard() {
           <Header>
             <UserWrapper>
             <UserInfo>
-              <Photo source={{uri: 'https://avatars.githubusercontent.com/u/59265044?v=4' }} />
+              <Photo source={{uri: user.photo }} />
               <User>
                 <UserGreeting>
                   Olá
                 </UserGreeting>
-                <UserName>Test</UserName>
+                <UserName>{user.name}</UserName>
               </User>
             </UserInfo>
-            <LogoutButton onPress={() => {}}>
+            <LogoutButton onPress={signOut}>
               <Icon name="power" /> 
             </LogoutButton>
             
